@@ -2379,5 +2379,3 @@ name: 'dechet.mp3'
 //console.log("DEBUT DU CODE")
 //Object.getPrototypeOf
 bot.login(path_val.selfbottoken[2]);
-//bot.login('NjcxNzE5NjY2NzY2MzE1NTQw.XjOZZw.hGdk_nEXaGMrd4_Nr-oRSIhzewE')
-//bot.login("NjcyNjM0Nzk3NDkwODMxMzcw.Xnevrg.6PeWbA3nkjT6zNZ-15GVawn6dQU")
