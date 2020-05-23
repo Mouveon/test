@@ -1,0 +1,129 @@
+//Requires
+const Discord = require('discord.js')
+const bot = new Discord.Client()
+const fs = require('fs')
+const util = require('util')
+const { Readable } = require('stream')
+const MongoClient = require("mongodb").MongoClient;
+const rp = require('request-promise')
+const readline = require('readline-sync')
+const xmlbuilder = require('xmlbuilder')
+const execSync = require('child_process').execSync;
+const path_val = require("../token.json")
+const https = require('https')
+const sortArray = require('sort-array')
+const ytdl = require('ytdl-core')
+const { CanvasRenderService } = require('chartjs-node-canvas');
+const TextToSpeechV1 = require('ibm-watson/text-to-speech/v1');
+const { IamAuthenticator } = require('ibm-watson/auth');
+
+//Constants and Vars
+
+const streamOptions={seek:0,volume:1}
+
+
+var voiceChannel
+
+var writedir = util.promisify(fs.writeFile)
+
+
+var num_api_q = 0
+var tempo
+var url = 'https://www.openquizzdb.org/api.php?key='+path_val.keyQuizz[num_api_q]+'&amount=30'
+var url_api;
+const dbName ='botFDP'
+
+
+const width = 1000;
+
+const canvasRenderService = new CanvasRenderService(width, height, (ChartJS) => {
+ChartJS.plugins.register({
+  beforeDraw: function(chartInstance) {
+    
+                          var ctx = chartInstance.chart.ctx;                                       
+                                    ctx.fillStyle = "white";       
+ctx.fillRect(0, 0, chartInstance.chart.width, chartInstance.chart.height);    
+ }    
+  });                                     
+ });                                                                        
+var flag = 0;
+  var count = 0;
+   var lines
+var question  
+   var reponse 
+
+
+
+////////////////////
+
+class Silence extends Readable{
+	_read(){
+			this.push(Buffer.from([0xF8,0xFF,0xFE]));
+	}
+
+}
+
+
+bot.on('ready', async ()=>{
+
+	await writedir('/home/moveon/quizz/tmp.txt',JSON.stringify(bot))
+
+//	console.log(bot.channels.cache.get('278706666176774144'))
+
+//        console.log(bot)
+        voiceChannel = bot.channels.cache.get('278706666176774144');
+
+	if(!voiceChannel) return console.error('VOICE CHAN DOES NOT EXIST FDP')
+
+	console.log("on va join le voc")
+//	console.log(voiceChannel)
+	voiceChannel.join().then(connection => {
+		console.log("vocal joined")
+
+		connection.play(new Silence(), {type:'opus'});
+
+		connection.on('speaking',(user,speaking) => {
+			if(user != undefined){
+				user.fetch().then(user=>{
+				//	console.log("new")
+					if(speaking.equals(1)){
+					//	console.log("parle")
+
+						console.log(user.username+" parle")
+					}else{
+	
+					//	console.log("parle pas")
+						console.log(user.username+" parle plus")
+
+					}
+				//	console.log(speaking)
+
+
+				})
+			}else{
+				console.log("bizarrerie")
+				//console.log(user.username)
+
+			}
+		})
+
+	});
+
+
+});
+
+bot.on('voiceStateUpdate', async (oldState,newState)=>{
+
+  if((oldState.channelID === null || oldState.channelID === undefined) && newState.channelID !== null){
+    console.log("vocal joined")
+  }else if(newState.channelID === null || newState.channelID === undefined){
+    console.log("vocal left")
+  }else{
+    console.log("vocal mute/unmute")
+  }
+
+});
+
+
+//bot.login('NjcxNzE5NjY2NzY2MzE1NTQw.XjOZZw.hGdk_nEXaGMrd4_Nr-oRSIhzewE')
+bot.login("NjcyNjM0Nzk3NDkwODMxMzcw.Xnevrg.6PeWbA3nkjT6zNZ-15GVawn6dQU")

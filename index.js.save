@@ -1,0 +1,74 @@
+const Discord = require('discord.js')
+const bot = new Discord.Client()
+const fs = require('fs')
+const util = require('util')
+const { Readable } = require('stream')
+
+
+var voiceChannel
+
+var writedir = util.promisify(fs.writeFile)
+
+
+class Silence extends Readable{
+	_read(){
+			this.push(Buffer.from([0xF8,0xFF,0xFE]));
+	}
+
+}
+
+
+bot.on('ready', async ()=>{
+
+	await writedir('/home/moveon/quizz/tmp.txt',JSON.stringify(bot))
+
+//	console.log(bot.channels.cache.get('278706666176774144'))
+
+//        console.log(bot)
+        voiceChannel = bot.channels.cache.get('278706666176774144');
+
+	if(!voiceChannel) return console.error('VOICE CHAN DOES NOT EXIST FDP')
+
+	console.log("on va join le voc")
+//	console.log(voiceChannel)
+	voiceChannel.join().then(connection => {
+		console.log("vocal joined")
+
+		connection.play(new Silence(), {type:'opus'});
+
+		connection.on('speaking',(user,speaking) => {
+			if(user != undefined){
+				user.fetch().then(user=>{A
+				//	console.log("new")
+
+				//	console.log(user.username)
+				//	console.log(speaking)
+
+
+				})
+			}else{
+
+				console.log("bizarrerie")
+			}
+		})
+
+	});
+
+
+});
+
+bot.on('voiceStateUpdate', async (oldState,newState)=>{
+
+  if((oldState.channelID === null || oldState.channelID === undefined) && newState.channelID !== null){
+    console.log("vocal joined")
+  }else if(newState.channelID === null || newState.channelID === undefined){
+    console.log("vocal left")
+  }else{
+    console.log("vocal mute/unmute")
+  }
+
+});
+
+
+//bot.login('NjcxNzE5NjY2NzY2MzE1NTQw.XjOZZw.hGdk_nEXaGMrd4_Nr-oRSIhzewE')
+bot.login("NjcyNjM0Nzk3NDkwODMxMzcw.Xnevrg.6PeWbA3nkjT6zNZ-15GVawn6dQU")
