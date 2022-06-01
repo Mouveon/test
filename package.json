@@ -29,7 +29,7 @@
     "readline-sync": "^1.4.10",
     "request": "^2.88.2",
     "request-promise": "^4.2.5",
-    "sharp": "^0.25.2",
+    "sharp": "^0.30.5",
     "snekfetch": "^4.0.4",
     "sort-array": "^4.1.0",
     "util": "^0.12.2",
